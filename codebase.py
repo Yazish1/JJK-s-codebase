@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load dataset and standardize columns
-jobs_postings = pd.read_csv(r"C:\Users\yazis\Documents\hackathon\dataset.csv", encoding='latin1')
+jobs_postings = pd.read_csv(r"C:\Users\yazis\Documents\hackatho\dataset.csv", encoding='latin1')
 jobs_postings.columns = [col.lower().strip() for col in jobs_postings.columns]
 
 # Matching function
