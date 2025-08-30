@@ -1,15 +1,15 @@
-Job Title,Company Name,Location,Employment Type,Responsibilities,Qualifications,Benefits,Work Schedule,Industry Tag
-Café Barista,Sunrise Café,"In-person, Surry Hills",Part-time,Prepare coffee & beverages; Serve customers; Maintain cleanliness,Café experience preferred,$30/hr + tips,"Morning shift, 3–4 hrs/day",Hospitality
-Food Prep Assistant,Bistro Central,"In-person, Newtown",Part-time,Prepare ingredients; Assist kitchen staff; Maintain hygiene,Cooking experience,$25/hr,2–3 hrs/day,Hospitality
-Event Setup Assistant,PartyCo,"In-person, Bondi",Casual,Set up event spaces; Arrange furniture & decorations,None,$30/hr,3–4 hrs/event,Events
+Job_Title,Company_Name,Location,Employment_Type,Responsibilities,Qualifications,Benefits,Work_Schedule,Industry_Tag
+Cafï¿½ Barista,Sunrise Cafï¿½,"In-person, Surry Hills",Part-time,Prepare coffee & beverages; Serve customers; Maintain cleanliness,Cafï¿½ experience preferred,$30/hr + tips,"Morning shift, 3ï¿½4 hrs/day",Hospitality
+Food Prep Assistant,Bistro Central,"In-person, Newtown",Part-time,Prepare ingredients; Assist kitchen staff; Maintain hygiene,Cooking experience,$25/hr,2ï¿½3 hrs/day,Hospitality
+Event Setup Assistant,PartyCo,"In-person, Bondi",Casual,Set up event spaces; Arrange furniture & decorations,None,$30/hr,3ï¿½4 hrs/event,Events
 Retail Shelf Stocker,ShopSmart,"In-person, Redfern",Part-time,Stock shelves; Check inventory; Assist customers,None,$25/hr,"Afternoon shift, 3 hrs",Retail
-Delivery Driver,ParcelGo,"In-person, Marrickville",Casual,Deliver parcels locally; Maintain delivery records,Car required,$35/delivery,2–3 hrs/day,Delivery
+Delivery Driver,ParcelGo,"In-person, Marrickville",Casual,Deliver parcels locally; Maintain delivery records,Car required,$35/delivery,2ï¿½3 hrs/day,Delivery
 Online English Tutor,LearnOnline,Online,Contract,Conduct 1-on-1 sessions; Prepare lesson materials; Track student progress,"Fluent English, teaching experience",$40/hr,Flexible,Education
-Homework Helper,SmartTutors,"In-person, Balmain",Contract,Help students with homework; Answer questions; Report progress,Subject knowledge,$25/hr,1–2 hrs/day,Education
+Homework Helper,SmartTutors,"In-person, Balmain",Contract,Help students with homework; Answer questions; Report progress,Subject knowledge,$25/hr,1ï¿½2 hrs/day,Education
 Retail Assistant,QuickShop,"In-person, Paddington",Part-time,Assist customers; Manage cash register; Organize displays,None,$27/hr,Afternoon shift,Retail
 Virtual Admin Assistant,OfficeAnywhere,Online,Contract,Manage emails & calendar; Organize documents,Basic computer skills,$25/hr,Flexible,Administration
 Social Media Assistant,SocialBoost,Online,Contract,Schedule posts; Engage with followers; Track analytics,Social media knowledge,$30/hr,Flexible,Marketing
-IT Support Technician,NetSolutions,"In-person, CBD",Casual,Troubleshoot hardware/software; Assist users; Maintain IT equipment,IT knowledge,$32/hr,3–4 hrs/day,IT
-Logistics Assistant,QuickShip,"In-person, Marrickville",Casual,Sort packages; Load/unload shipments; Update tracking info,Physical fitness,$28/hr,3–4 hrs/day,Logistics
+IT Support Technician,NetSolutions,"In-person, CBD",Casual,Troubleshoot hardware/software; Assist users; Maintain IT equipment,IT knowledge,$32/hr,3ï¿½4 hrs/day,IT
+Logistics Assistant,QuickShip,"In-person, Marrickville",Casual,Sort packages; Load/unload shipments; Update tracking info,Physical fitness,$28/hr,3ï¿½4 hrs/day,Logistics
 Marketing Content Creator,BrandLaunch,Online,Contract,Create content for campaigns; Edit & proofread materials; Schedule posts,Marketing knowledge,$35/hr,Flexible,Marketing
 Customer Support Specialist,HelpDesk Pro,Online,Contract,Respond to customer inquiries; Log issues; Provide solutions,Communication skills,$30/hr,Flexible,Customer Service
