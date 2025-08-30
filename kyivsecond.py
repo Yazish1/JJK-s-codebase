@@ -63,7 +63,7 @@ class DatabaseManagement:
         try:
             with sqlite3.connect(self.db_path) as db:
                 cursor = db.cursor()
-                cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+                cursor.execute(f"INSERT INTO users (username, password) VALUES ({username}, {password})")
                 db.commit()
                 return True
         except sqlite3.IntegrityError:
@@ -76,7 +76,7 @@ class DatabaseManagement:
         try:
             with sqlite3.connect(self.db_path) as db:
                 cursor = db.cursor()
-                cursor.execute("SELECT id FROM users WHERE username=? AND password=?", (username, password))
+                cursor.execute(f"SELECT id FROM users WHERE username='{username}' AND password=='{password}'")
                 result = cursor.fetchone()
                 return result[0] if result else None
         except Exception as e:
@@ -94,102 +94,33 @@ class DatabaseManagement:
             return pd.DataFrame()
 
     def matched_jobs(self, user_interests, jobs_df):
-        if jobs_df.empty:
-            print("No jobs to search through")
-            return pd.DataFrame()
-        
-        print(f"=== JOB MATCHING DEBUG ===")
-        print(f"Searching for interests: {user_interests}")
-        print(f"Total jobs in database: {len(jobs_df)}")
-        
-        # Print available columns for debugging
-        print(f"Available columns: {list(jobs_df.columns)}")
-        
-        # Print first few jobs for debugging
-        print("First 3 jobs in database:")
-        for i, (_, row) in enumerate(jobs_df.head(3).iterrows()):
-            print(f"  Job {i+1}: {row.get('Job_Title', 'N/A')} - Industry: {row.get('Industry_Tag', 'N/A')}")
-        
-        matches = []
-        for idx, (_, row) in enumerate(jobs_df.iterrows()):
-            # Get text fields with safe defaults and convert to string
-            industry_text = str(row.get("Industry_Tag", "")).lower().strip()
-            
-            # Combine all searchable text
-            searchable_text = f"{industry_text}"
-            
-            if idx < 3:  # Debug first 3 jobs
-                print(f"\nChecking job {idx + 1}: {row.get('Job_Title', 'N/A')}")
-                print(f"  Industry: '{industry_text}'")
-                print(f"  Combined text: '{searchable_text[:100]}...'")
-            
-            matched = False
-            matched_interest = ""
-            
-            for interest in user_interests:
-                interest_lower = interest.lower().strip()
-                if not interest_lower:  # Skip empty interests
-                    continue
-                
-                if idx < 3:  # Debug first 3 jobs
-                    print(f"  Looking for: '{interest_lower}'")
-                
-                # Check each field individually for better matching
-                if (interest_lower == industry_text):
-                    
-                    matched = True
-                    matched_interest = interest_lower
-                    if idx < 3:
-                        print(f"  *** MATCH FOUND for '{interest_lower}' ***")
-                    break
-                
-                # Also try partial word matching for common abbreviations
-                words_in_text = searchable_text.split()
-                for word in words_in_text:
-                    if interest_lower in word or word.startswith(interest_lower):
-                        matched = True
-                        matched_interest = interest_lower
-                        if idx < 3:
-                            print(f"  *** PARTIAL MATCH FOUND for '{interest_lower}' in word '{word}' ***")
-                        break
-                
-                if matched:
-                    break
-            
-            if matched:
-                print(f"Job {idx + 1} matched on interest: {matched_interest}")
-                matches.append(row)
-        
-        result_df = pd.DataFrame(matches)
-        print(f"=== MATCHING COMPLETE ===")
-        print(f"Found {len(result_df)} matching jobs out of {len(jobs_df)} total jobs")
-        
-        if len(result_df) > 0:
-            print("Matched job titles:")
-            for _, job in result_df.head(5).iterrows():
-                print(f"  - {job.get('Job_Title', 'N/A')} ({job.get('Industry_Tag', 'N/A')})")
-        
-        return result_df
+        with sqlite3.connect(self.db_path) as db:
 
-    def add_to_shortlist(self, user_id, job_rowid):
+            cursor = db.cursor()
+
+            queryString = f"select * from listings where Industry_Tag == '{user_interests[0]}'"
+
+            if len(user_interests) > 1:
+                for i in range(1, len(user_interests)-1):
+                    queryString += f" or Industry_Tag == '{user_interests[i]}'"
+            queryString += ';'
+
+            result = cursor.execute(queryString)
+            #result = cursor.execute("SELECT * from listings;")
+            imported = [b for b in result.fetchall()] #0: the number of arguments returned.
+
+            return pd.DataFrame(imported)
+
+    def add_to_shortlist(self, user_id, job_name):
         try:
             with sqlite3.connect(self.db_path) as db:
                 cursor = db.cursor()
+
                 print(f"=== SHORTLIST DEBUG ===")
-                print(f"Adding to shortlist: user_id={user_id} (type: {type(user_id)}), job_rowid={job_rowid} (type: {type(job_rowid)})")
-                
-                # First check if the job actually exists
-                cursor.execute("SELECT COUNT(*) FROM listings WHERE ROWID = ?", (job_rowid,))
-                job_exists = cursor.fetchone()[0]
-                print(f"Job exists in listings table: {job_exists > 0}")
-                
-                if job_exists == 0:
-                    print("ERROR: Job does not exist in listings table")
-                    return False
-                
+                print(f"Adding to shortlist: user_id={user_id} job={job_name}")
+
                 # Check if already in shortlist
-                cursor.execute("SELECT COUNT(*) FROM shortlist WHERE user_id=? AND job_rowid=?", 
-                             (user_id, job_rowid))
+                cursor.execute("SELECT COUNT(*) FROM shortlisted WHERE user_id=? AND job_name=?", (user_id, job_name))
                 already_exists = cursor.fetchone()[0]
                 print(f"Already in shortlist: {already_exists > 0}")
                 
@@ -198,8 +129,7 @@ class DatabaseManagement:
                     return True
                 
                 # Insert into shortlist
-                cursor.execute("INSERT INTO shortlist (user_id, job_rowid) VALUES (?, ?)", 
-                             (user_id, job_rowid))
+                cursor.execute("INSERT INTO shortlisted (user_id, job_name) VALUES (?, ?)", (user_id, job_name))
                 rows_affected = cursor.rowcount
                 print(f"Rows affected by insert: {rows_affected}")
                 
@@ -207,9 +137,8 @@ class DatabaseManagement:
                 print("Transaction committed")
                 
                 # Verify insertion
-                cursor.execute("SELECT COUNT(*) FROM shortlist WHERE user_id=? AND job_rowid=?", 
-                             (user_id, job_rowid))
-                final_count = cursor.fetchone()[0]
+                cursor.execute("SELECT COUNT(*) FROM shortlisted WHERE user_id=? AND job_name=?", (user_id, job_name))
+                final_count = cursor.fetchall()
                 print(f"Final verification count: {final_count}")
                 
                 if final_count > 0:
@@ -659,8 +588,7 @@ class SwipingScreen(Screen):
         
         if self.current_index >= len(self.jobs):
             # No more jobs
-            no_jobs = Label(text="No more jobs!\n\nGo back to search again\nor check your shortlist", 
-                           font_size=18, color=(0.3, 0.3, 0.3, 1), halign="center")
+            no_jobs = Label(text="No more jobs!\n\nGo back to search again\nor check your shortlist", font_size=18, color=(0.3, 0.3, 0.3, 1), halign="center")
             self.card_container.add_widget(no_jobs)
             return
         
@@ -682,23 +610,22 @@ class SwipingScreen(Screen):
     def like_job(self, instance):
         if self.current_card and self.current_index < len(self.jobs):
             job = self.jobs.iloc[self.current_index]
-            job_rowid = job.get('ROWID')
+            print(job)
             
             print(f"=== LIKE JOB DEBUG ===")
             print(f"Job Title: {job.get('Job_Title', 'Unknown')}")
-            print(f"Job ROWID: {job_rowid}")
-            print(f"Job ROWID type: {type(job_rowid)}")
             print(f"User ID: {self.manager.user_id}")
             print(f"User ID type: {type(self.manager.user_id)}")
+
+            jobName = job.get('Job_Title')
             
-            if job_rowid is not None and self.manager.user_id is not None:
+            if self.manager.user_id is not None:
                 # Ensure both are integers
                 try:
-                    job_rowid_int = int(job_rowid)
                     user_id_int = int(self.manager.user_id)
-                    print(f"Converting to: user_id={user_id_int}, job_rowid={job_rowid_int}")
+                    print(f"Converting to: user_id={user_id_int}")
                     
-                    success = self.db_manager.add_to_shortlist(user_id_int, job_rowid_int)
+                    success = self.db_manager.add_to_shortlist(user_id_int, jobName)
                     if success:
                         print("SUCCESS: Added to shortlist!")
                         # Show visual feedback
@@ -709,7 +636,6 @@ class SwipingScreen(Screen):
                     print(f"CONVERSION ERROR: {e}")
             else:
                 print("ERROR: Missing job_rowid or user_id")
-                print(f"job_rowid is None: {job_rowid is None}")
                 print(f"user_id is None: {self.manager.user_id is None}")
             
             # Animate card sliding right

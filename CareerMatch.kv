@@ -1,58 +1,61 @@
 #:kivy 2.2.0
 
 <CommonScreen@FloatLayout>:
-    size_hint: None, None
-    size: 800, 1400
-    
-    # Background color (white)
+    size_hint: 1, 1
+
+    # Background
     canvas.before:
         Color:
             rgba: 1, 1, 1, 1
         Rectangle:
-            pos: 0,0
-            size: 800, 1400
-        
-        # header and navBar
-        Color:
-            rgba: 0,1,1,1
-        Rectangle:
-            pos: 0, 1250
-            size: 800, 150
-        Rectangle:
-            pos: 0,0
-            size: 800, 150
+            pos: self.pos
+            size: self.size
 
+        # header
+        Color:
+            rgba: 0, 1, 1, 1
+        Rectangle:
+            pos: self.x, self.top - 150
+            size: self.width, 150
+
+        # navBar
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, 150
+
+    # Header buttons
     Button:
         size_hint: None, None
-        pos: 690, 1290
+        pos_hint: {"right": 0.95, "top": 0.97}
         size: 75, 75
         background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toAccount()
 
     Button:
         size_hint: None, None
-        pos: 35, 1290
+        pos_hint: {"x": 0.05, "top": 0.97}
         size: 75, 75
         background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toHome()
 
+    # Navbar buttons
     Button:
         size_hint: None, None
-        pos: 35, 37
+        pos_hint: {"x": 0.05, "y": 0.03}
         size: 150, 75
         background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toShortlist()
     
     Button:
         size_hint: None, None
-        pos: 325, 37
+        pos_hint: {"center_x": 0.5, "y": 0.03}
         size: 150, 75
         background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toSwiping()
     
     Button:
         size_hint: None, None
-        pos: 615, 37
+        pos_hint: {"right": 0.95, "y": 0.03}
         size: 150, 75
         background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toAccount()
@@ -63,11 +66,11 @@
         font_size: 64
         color: 0, 0, 0, 1
         size_hint: None, None
-        pos: 50, 1300
+        pos_hint: {"center_x": 0.5, "top": 0.95}
         size: 700, 50
         bold: True
 
-    
+
 <HomeScreen>:
     CommonScreen:
         title: "HOME"
@@ -75,11 +78,11 @@
         Label:
             id: discover
             text: "Discover"
-            font_size: 50
+            font_size: root.height * (50/1400)
             color: 0, 0, 0, 1
             size_hint: None, None
-            pos: 90, 1150
-            size: 100, 50
+            size: root.width * (200/800), root.height * (50/1400)
+            pos_hint: {"x": 0.12, "top": 1 - (200/1400)}
             halign: 'left'
             bold: True
             underline: True
@@ -87,25 +90,25 @@
         Label:
             id: shortlist
             text: "Shortlist"
-            font_size: 50
+            font_size: root.height * (50/1400)
             color: 0, 0, 0, 1
             size_hint: None, None
-            pos: 90, 750
-            size: 100, 50
+            size: root.width * (200/800), root.height * (50/1400)
+            pos_hint: {"x": 0.12, "top": 1 - (560/1400)}
             halign: 'left'
             bold: True
             underline: True
+
 
 
 <AccountScreen>:
     CommonScreen:
         title: "ACCOUNT"
 
-        # Button to navigate
         Button:
             text: "Go home"
             size_hint: None, None
-            pos: 50, 800
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
             size: 700, 200
             background_color: 0.2, 0.6, 0.9, 1
             on_press: app.toHome()
