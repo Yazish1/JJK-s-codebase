@@ -1,5 +1,19 @@
 #:kivy 2.2.0
 
+<RoundedButton@Button>:
+    background_normal: ''   # disable Kivy default background
+    background_down: ''     # also disable pressed image
+    background_color: 0, 0, 0, 0
+    source: ''  # <-- we'll use this to set images
+    canvas.before:
+        Color:
+            rgba: (189/255,149/255,100/255,1) if self.state == "normal" else (71/255,47/255,23/255, 1)   # don't tint image
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [18]
+            source: self.source if self.source else ''
+
 <CommonScreen@FloatLayout>:
     size_hint: 1, 1
 
@@ -13,7 +27,7 @@
 
         # header
         Color:
-            rgba: 0, 1, 1, 1
+            rgba: 0.397, 0.275, 0.161, 1
         Rectangle:
             pos: self.x, self.top - 150
             size: self.width, 150
@@ -24,40 +38,42 @@
             size: self.width, 150
 
     # Header buttons
-    Button:
+    RoundedButton:
+        source: 'profile.png'
         size_hint: None, None
         pos_hint: {"right": 0.95, "top": 0.97}
         size: 75, 75
-        background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toAccount()
 
-    Button:
+
+    RoundedButton:
+        source: 'home.png'
         size_hint: None, None
         pos_hint: {"x": 0.05, "top": 0.97}
         size: 75, 75
-        background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toHome()
 
+
     # Navbar buttons
-    Button:
+    RoundedButton:
         size_hint: None, None
+        text: 'shortlist'
         pos_hint: {"x": 0.05, "y": 0.03}
         size: 150, 75
-        background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toShortlist()
     
-    Button:
+    RoundedButton:
         size_hint: None, None
+        text: 'matching'
         pos_hint: {"center_x": 0.5, "y": 0.03}
         size: 150, 75
-        background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toSwiping()
     
-    Button:
+    RoundedButton:
         size_hint: None, None
+        text: 'account'
         pos_hint: {"right": 0.95, "y": 0.03}
         size: 150, 75
-        background_color: 0.2, 0.6, 0.9, 1
         on_press: app.toAccount()
     
     Label:
@@ -66,7 +82,7 @@
         font_size: 64
         color: 0, 0, 0, 1
         size_hint: None, None
-        pos_hint: {"center_x": 0.5, "top": 0.95}
+        pos_hint: {"center_x": 0.5, "top": 0.96}
         size: 700, 50
         bold: True
 
@@ -82,7 +98,7 @@
             color: 0, 0, 0, 1
             size_hint: None, None
             size: root.width * (200/800), root.height * (50/1400)
-            pos_hint: {"x": 0.12, "top": 1 - (200/1400)}
+            pos_hint: {"x": 0.07, "top": 1 - (200/1400)}
             halign: 'left'
             bold: True
             underline: True
@@ -94,7 +110,7 @@
             color: 0, 0, 0, 1
             size_hint: None, None
             size: root.width * (200/800), root.height * (50/1400)
-            pos_hint: {"x": 0.12, "top": 1 - (560/1400)}
+            pos_hint: {"x": 0.07, "top": 1 - (560/1400)}
             halign: 'left'
             bold: True
             underline: True
@@ -105,13 +121,12 @@
     CommonScreen:
         title: "ACCOUNT"
 
-        Button:
-            text: "Go home"
+        RoundedButton:
+            text: "login"
             size_hint: None, None
             pos_hint: {"center_x": 0.5, "center_y": 0.5}
             size: 700, 200
-            background_color: 0.2, 0.6, 0.9, 1
-            on_press: app.toHome()
+            on_press: app.toLogin()
 
 <ShortlistScreen>:
     CommonScreen:
